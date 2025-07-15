@@ -84,6 +84,11 @@ public class EventsAndSourcesCreator {
             String eventsFilePath = "backend/src/main/resources/events/events-" + fileIndex + ".xml";
             File eventsFile = new File(eventsFilePath);
 
+            // Skip if the events file already exists
+            if (eventsFile.exists()) {
+               continue;
+            }
+
             Document eventsDoc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
             Element root = createElement(eventsDoc, "events");
             eventsDoc.appendChild(root);
