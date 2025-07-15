@@ -1,4 +1,4 @@
-package es.jorgemon;
+package es.jorgemon.web;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
