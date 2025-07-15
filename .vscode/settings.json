@@ -8,5 +8,8 @@
   ],
   "java.configuration.updateBuildConfiguration": "interactive",
   "java.dependency.syncWithFolderExplorer": true,
-  "editor.tabSize": 3
+  "[java]": {
+    "editor.tabSize": 3
+  },
+  "editor.tabSize": 2
 }
