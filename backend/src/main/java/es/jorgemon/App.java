@@ -1,8 +1,8 @@
 package es.jorgemon;
 
 import es.jorgemon.service.EventsAndSourcesLoader;
+import es.jorgemon.http.WebServer;
 import es.jorgemon.service.EventsAndSourcesCreator;
-import es.jorgemon.web.WebServer;
 
 public class App {
    public static void main(String[] args) {

@@ -1,4 +1,4 @@
-package es.jorgemon.web;
+package es.jorgemon.http;
 
 import java.util.Map;
 
