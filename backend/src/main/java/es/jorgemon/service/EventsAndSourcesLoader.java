@@ -1,7 +1,7 @@
 package es.jorgemon.service;
 
 import java.io.File;
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -125,8 +125,8 @@ public class EventsAndSourcesLoader {
             Element element = (Element) node;
             String id = element.getElementsByTagName("id").item(0).getTextContent();
             String sourceId = element.getElementsByTagName("sourceId").item(0).getTextContent();
-            ZonedDateTime timestamp = ZonedDateTime
-                  .parse(element.getElementsByTagName("timestamp").item(0).getTextContent());
+            OffsetDateTime timestamp = OffsetDateTime
+                 .parse(element.getElementsByTagName("timestamp").item(0).getTextContent());
             int value = Integer.parseInt(element.getElementsByTagName("value").item(0).getTextContent());
             double lat = Double.parseDouble(element.getElementsByTagName("lat").item(0).getTextContent());
             double lon = Double.parseDouble(element.getElementsByTagName("lon").item(0).getTextContent());

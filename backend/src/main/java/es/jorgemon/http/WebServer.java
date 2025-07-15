@@ -40,6 +40,7 @@ public class WebServer {
          Map<String, String> queryParams = parseQueryParams(exchange.getRequestURI().getQuery());
          try {
             String response = handler.handle(queryParams);
+            exchange.getResponseHeaders().add("Content-Type", "application/json");
             exchange.sendResponseHeaders(200, response.getBytes().length);
             exchange.getResponseBody().write(response.getBytes());
             exchange.getResponseBody().close();

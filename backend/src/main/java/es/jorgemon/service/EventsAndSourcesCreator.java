@@ -12,7 +12,7 @@ import org.w3c.dom.NodeList;
 import es.jorgemon.model.Source;
 import es.jorgemon.model.Event;
 import es.jorgemon.model.Location;
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 
 public class EventsAndSourcesCreator {
    // Peninsula iberica
@@ -98,7 +98,7 @@ public class EventsAndSourcesCreator {
                Location location = new Location(lat, lon);
 
                String id = UUID.randomUUID().toString();
-               ZonedDateTime timestamp = generateRandomTimestamp();
+               OffsetDateTime timestamp = generateRandomTimestamp();
                int value = (int) (1 + Math.random() * 100);
 
                Event event = new Event(id, sourceId, timestamp, value, location);
@@ -113,11 +113,11 @@ public class EventsAndSourcesCreator {
       }
    }
 
-   private static ZonedDateTime generateRandomTimestamp() {
+   private static OffsetDateTime generateRandomTimestamp() {
       long currentTimeMillis = System.currentTimeMillis();
       long fiveYearsMillis = 5L * 365 * 24 * 60 * 60 * 1000;
       long randomTimeMillis = currentTimeMillis - (long) (Math.random() * fiveYearsMillis);
-      return ZonedDateTime.ofInstant(java.time.Instant.ofEpochMilli(randomTimeMillis), java.time.ZoneId.systemDefault());
+      return OffsetDateTime.ofInstant(java.time.Instant.ofEpochMilli(randomTimeMillis), java.time.ZoneId.systemDefault());
    }
 
    private static Element createSourceElement(Document doc, Source source) {
