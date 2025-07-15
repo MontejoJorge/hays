@@ -33,7 +33,7 @@ public class CreateEventsAndSources {
       File directory = new File(path);
       if (!directory.exists()) {
          if (!directory.mkdirs()) {
-            System.err.println("Failed to create directory: " + path);
+            throw new RuntimeException("Failed to create directory: " + path);
          }
       }
    }
@@ -63,7 +63,7 @@ public class CreateEventsAndSources {
          TransformerFactory.newInstance().newTransformer().transform(new DOMSource(doc), new StreamResult(sourcesFile));
 
       } catch (Exception e) {
-         System.err.println("Error creating XML file: " + e.getMessage());
+         throw new RuntimeException("Error creating XML file: " + e.getMessage());
       }
    }
 
@@ -109,7 +109,7 @@ public class CreateEventsAndSources {
          }
 
       } catch (Exception e) {
-         System.err.println("Error creating events: " + e.getMessage());
+         throw new RuntimeException("Error creating events: " + e.getMessage());
       }
    }
 

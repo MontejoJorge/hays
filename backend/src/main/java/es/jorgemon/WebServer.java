@@ -31,7 +31,7 @@ public class WebServer {
          server.start();
          System.out.println("Server started on http://localhost:" + port);
       } catch (IOException e) {
-         System.err.println("Error: " + e.getMessage());
+         throw new RuntimeException("Failed to start server: " + e.getMessage());
       }
    }
 
