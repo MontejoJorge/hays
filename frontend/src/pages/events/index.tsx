@@ -1,32 +1,44 @@
-import { useInfiniteQuery } from '@tanstack/react-query';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
+import React from 'react';
 
 import { getEvents } from '../../api/events';
+import { Paginator } from '../../components/';
 import type { Event, Pagination } from '../../types';
 
 const EventsPage = () => {
-  const query = useInfiniteQuery<Pagination<Event>, Error>({
-    queryKey: ['events'],
-    queryFn: ({ pageParam = 1 }) => getEvents({ page: pageParam as number }),
-    initialPageParam: 1,
-    getNextPageParam: (lastPage) => {
-      return lastPage.nextPage || undefined;
-    },
+  const [currentPage, setCurrentPage] = React.useState(1);
+
+  const { data } = useQuery<Pagination<Event>>({
+    queryKey: ['events', currentPage],
+    queryFn: () => getEvents({ page: currentPage }),
+    placeholderData: keepPreviousData,
   });
+
+  const totalPages = data?.totalPages || 1;
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
 
   return (
     <>
       <h1>Events Page</h1>
       <ul>
-        {query.data?.pages.map((page) =>
-          page.data.map((event) => (
-            <li key={event.id}>
-              <strong>{event.id}</strong> -{' '}
-              {new Date(event.timestamp).toLocaleString()} - Value:{' '}
-              {event.value}
-            </li>
-          )),
-        )}
+        {data?.data.map((event: Event) => (
+          <li key={event.id}>
+            <strong>{event.id}</strong> -{' '}
+            {new Date(event.timestamp).toLocaleString()} - Value: {event.value}
+          </li>
+        ))}
       </ul>
+      <Paginator
+        currentPage={currentPage}
+        totalPages={totalPages}
+        fetchNextPage={() => handlePageChange(currentPage + 1)}
+        fetchPreviousPage={() => handlePageChange(currentPage - 1)}
+        hasNextPage={currentPage < totalPages}
+        hasPreviousPage={currentPage > 1}
+      />
     </>
   );
 };
