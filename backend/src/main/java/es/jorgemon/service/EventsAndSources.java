@@ -6,6 +6,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -21,16 +24,24 @@ import es.jorgemon.model.Source;
 
 public class EventsAndSources {
 
+   private static final ExecutorService executor = Executors
+         .newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+
    public static final Map<String, Source> sources = new HashMap<>();
    public static final List<Event> events = new ArrayList<>();
 
-
    public static void load() {
       long start = System.currentTimeMillis();
-      loadSources();
-      loadEvents();
+
+      CompletableFuture<Void> sourcesFuture = CompletableFuture.runAsync(EventsAndSources::loadSources, executor);
+      CompletableFuture<Void> eventsFuture = CompletableFuture.runAsync(EventsAndSources::loadEvents, executor);
+
+      CompletableFuture<Void> combinedFuture = CompletableFuture.allOf(sourcesFuture, eventsFuture);
+
+      combinedFuture.join();
+
       long end = System.currentTimeMillis();
-      System.out.println("Loaded sources and events in " + ((end - start) / 1000.0) + " seconds.");
+      System.out.println("Loaded sources and events in " + ((end - start) / 1000) + " seconds.");
    }
 
    public static void loadSources() {
@@ -50,11 +61,11 @@ public class EventsAndSources {
 
          for (int i = 0; i < nodeList.getLength(); i++) {
             Node node = nodeList.item(i);
-            if (node.getNodeType() != Node.ELEMENT_NODE) continue;
-            
+            if (node.getNodeType() != Node.ELEMENT_NODE)
+               continue;
+
             Element element = (Element) node;
-            
-            
+
             String id = element.getElementsByTagName("id").item(0).getTextContent();
             String name = element.getElementsByTagName("name").item(0).getTextContent();
             double lat = Double.parseDouble(element.getElementsByTagName("lat").item(0).getTextContent());
@@ -80,16 +91,23 @@ public class EventsAndSources {
       }
 
       File[] files = eventsDir.listFiles((dir, name) -> name.toLowerCase().endsWith(".xml"));
-      if (files == null) return;
+      if (files == null)
+         return;
+
+      List<CompletableFuture<Void>> futures = new ArrayList<>();
 
       for (File file : files) {
-         parseEventsFromFile(file);
+         futures.add(CompletableFuture.runAsync(() -> loadEventsFromFile(file), executor));
       }
+
+      // Wait for all events to be loaded
+      CompletableFuture<Void> allFutures = CompletableFuture.allOf(futures.toArray(new CompletableFuture[0]));
+      allFutures.join();
 
       System.out.println("Loaded " + events.size() + " events from " + files.length + " files.");
    }
 
-   private static void parseEventsFromFile(File file) {
+   private static void loadEventsFromFile(File file) {
       try {
          DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
          DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
@@ -100,12 +118,14 @@ public class EventsAndSources {
 
          for (int i = 0; i < nodeList.getLength(); i++) {
             Node node = nodeList.item(i);
-            if (node.getNodeType() != Node.ELEMENT_NODE) continue;
+            if (node.getNodeType() != Node.ELEMENT_NODE)
+               continue;
 
             Element element = (Element) node;
             String id = element.getElementsByTagName("id").item(0).getTextContent();
             String sourceId = element.getElementsByTagName("sourceId").item(0).getTextContent();
-            ZonedDateTime timestamp = ZonedDateTime.parse(element.getElementsByTagName("timestamp").item(0).getTextContent());
+            ZonedDateTime timestamp = ZonedDateTime
+                  .parse(element.getElementsByTagName("timestamp").item(0).getTextContent());
             int value = Integer.parseInt(element.getElementsByTagName("value").item(0).getTextContent());
             double lat = Double.parseDouble(element.getElementsByTagName("lat").item(0).getTextContent());
             double lon = Double.parseDouble(element.getElementsByTagName("lon").item(0).getTextContent());
