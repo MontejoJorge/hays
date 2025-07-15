@@ -22,7 +22,7 @@ import es.jorgemon.model.Event;
 import es.jorgemon.model.Location;
 import es.jorgemon.model.Source;
 
-public class EventsAndSources {
+public class EventsAndSourcesLoader {
 
    private static final ExecutorService executor = Executors
          .newFixedThreadPool(Runtime.getRuntime().availableProcessors());
@@ -33,8 +33,8 @@ public class EventsAndSources {
    public static void load() {
       long start = System.currentTimeMillis();
 
-      CompletableFuture<Void> sourcesFuture = CompletableFuture.runAsync(EventsAndSources::loadSources, executor);
-      CompletableFuture<Void> eventsFuture = CompletableFuture.runAsync(EventsAndSources::loadEvents, executor);
+      CompletableFuture<Void> sourcesFuture = CompletableFuture.runAsync(EventsAndSourcesLoader::loadSources, executor);
+      CompletableFuture<Void> eventsFuture = CompletableFuture.runAsync(EventsAndSourcesLoader::loadEvents, executor);
 
       CompletableFuture<Void> combinedFuture = CompletableFuture.allOf(sourcesFuture, eventsFuture);
 

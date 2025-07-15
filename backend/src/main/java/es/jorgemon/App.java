@@ -1,6 +1,6 @@
 package es.jorgemon;
 
-import es.jorgemon.service.EventsAndSources;
+import es.jorgemon.service.EventsAndSourcesLoader;
 import es.jorgemon.service.EventsAndSourcesCreator;
 import es.jorgemon.web.WebServer;
 
@@ -10,7 +10,7 @@ public class App {
       EventsAndSourcesCreator.main();
 
       // Load sources and events
-      EventsAndSources.load();
+      EventsAndSourcesLoader.load();
 
       // Start the basic web server
       WebServer.main();
