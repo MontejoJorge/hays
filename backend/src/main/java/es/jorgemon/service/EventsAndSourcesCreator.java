@@ -1,4 +1,4 @@
-package es.jorgemon;
+package es.jorgemon.service;
 
 import java.io.File;
 import java.util.UUID;
@@ -14,7 +14,7 @@ import es.jorgemon.model.Event;
 import es.jorgemon.model.Location;
 import java.time.ZonedDateTime;
 
-public class CreateEventsAndSources {
+public class EventsAndSourcesCreator {
    // Peninsula iberica
    private static final double MIN_LAT = 36.0;
    private static final double MAX_LAT = 44.5;
