@@ -6,17 +6,15 @@ public class Event {
    private String id;
    private String sourceId;
    private ZonedDateTime timestamp;
-   private double value;
-   private double lat;
-   private double lon;
+   private int value;
+   private Location location;
 
-   public Event(String id, String sourceId, ZonedDateTime timestamp, double value, double lat, double lon) {
+   public Event(String id, String sourceId, ZonedDateTime timestamp, int value, Location location) {
       this.id = id;
       this.sourceId = sourceId;
       this.timestamp = timestamp;
       this.value = value;
-      this.lat = lat;
-      this.lon = lon;
+      this.location = location;
    }
 
    public String getId() {
@@ -31,15 +29,11 @@ public class Event {
       return timestamp;
    }
 
-   public double getValue() {
+   public int getValue() {
       return value;
    }
 
-   public double getLat() {
-      return lat;
-   }
-
-   public double getLon() {
-      return lon;
+   public Location getLocation() {
+      return location;
    }
 }

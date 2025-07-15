@@ -3,14 +3,12 @@ package es.jorgemon.model;
 public class Source {
    private String id;
    private String name;
-   private double lat;
-   private double lon;
+   private Location location;
 
-   public Source(String id, String name, double lat, double lon) {
+   public Source(String id, String name, Location location) {
       this.id = id;
       this.name = name;
-      this.lat = lat;
-      this.lon = lon;
+      this.location = location;
    }
 
    public String getId() {
@@ -21,11 +19,7 @@ public class Source {
       return name;
    }
 
-   public double getLat() {
-      return lat;
-   }
-
-   public double getLon() {
-      return lon;
+   public Location getLocation() {
+      return location;
    }
 }

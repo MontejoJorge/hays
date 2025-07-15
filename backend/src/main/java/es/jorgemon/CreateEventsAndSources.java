@@ -11,6 +11,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import es.jorgemon.model.Source;
 import es.jorgemon.model.Event;
+import es.jorgemon.model.Location;
 import java.time.ZonedDateTime;
 
 public class CreateEventsAndSources {
@@ -53,8 +54,9 @@ public class CreateEventsAndSources {
          for (int i = 1; i <= 10; i++) {
             double lat = MIN_LAT + Math.random() * (MAX_LAT - MIN_LAT);
             double lon = MIN_LON + Math.random() * (MAX_LON - MIN_LON);
+            Location location = new Location(lat, lon);
 
-            Source source = new Source(UUID.randomUUID().toString(), "source-" + i, lat, lon);
+            Source source = new Source(UUID.randomUUID().toString(), "source-" + i, location);
             root.appendChild(createSourceElement(doc, source));
          }
 
@@ -93,12 +95,13 @@ public class CreateEventsAndSources {
                String sourceId = sourceElement.getElementsByTagName("id").item(0).getTextContent();
                double lat = MIN_LAT + Math.random() * (MAX_LAT - MIN_LAT);
                double lon = MIN_LON + Math.random() * (MAX_LON - MIN_LON);
+               Location location = new Location(lat, lon);
 
                String id = UUID.randomUUID().toString();
                ZonedDateTime timestamp = generateRandomTimestamp();
                int value = (int) (1 + Math.random() * 100);
 
-               Event event = new Event(id, sourceId, timestamp, value, lat, lon);
+               Event event = new Event(id, sourceId, timestamp, value, location);
                root.appendChild(createEventElement(eventsDoc, event));
             }
 
@@ -123,8 +126,8 @@ public class CreateEventsAndSources {
       sourceElement.appendChild(createElementWithText(doc, "name", source.getName()));
 
       Element locationElement = createElement(doc, "location");
-      locationElement.appendChild(createElementWithText(doc, "lat", String.valueOf(source.getLat())));
-      locationElement.appendChild(createElementWithText(doc, "lon", String.valueOf(source.getLon())));
+      locationElement.appendChild(createElementWithText(doc, "lat", String.valueOf(source.getLocation().getLat())));
+      locationElement.appendChild(createElementWithText(doc, "lon", String.valueOf(source.getLocation().getLon())));
 
       sourceElement.appendChild(locationElement);
       return sourceElement;
@@ -138,8 +141,8 @@ public class CreateEventsAndSources {
       eventElement.appendChild(createElementWithText(doc, "value", String.valueOf(event.getValue())));
 
       Element locationElement = createElement(doc, "location");
-      locationElement.appendChild(createElementWithText(doc, "lat", String.valueOf(event.getLat())));
-      locationElement.appendChild(createElementWithText(doc, "lon", String.valueOf(event.getLon())));
+      locationElement.appendChild(createElementWithText(doc, "lat", String.valueOf(event.getLocation().getLat())));
+      locationElement.appendChild(createElementWithText(doc, "lon", String.valueOf(event.getLocation().getLon())));
 
       eventElement.appendChild(locationElement);
       return eventElement;
