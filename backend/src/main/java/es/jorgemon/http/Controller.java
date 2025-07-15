@@ -9,6 +9,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import es.jorgemon.model.Event;
 import es.jorgemon.repository.EventsRepository;
+import es.jorgemon.dto.GetEventsRequestDto;
 
 public class Controller {
 
@@ -21,11 +22,22 @@ public class Controller {
    }
 
    public static String getEvents(Map<String, String> params) {
-      List<Event> events = EventsRepository.getAllEvents();
       try {
+         GetEventsRequestDto filter = objectMapper.convertValue(params, GetEventsRequestDto.class);
+
+         // Default pagination values
+         if (filter.getPage() == null) {
+            filter.setPage(1);
+         }
+         if (filter.getPageSize() == null) {
+            filter.setPageSize(10);
+         }
+
+         List<Event> events = EventsRepository.getEvents(filter);
+
          return objectMapper.writeValueAsString(events);
       } catch (Exception e) {
-         throw new RuntimeException(e);
+         throw new RuntimeException("Error processing request: " + e.getMessage(), e);
       }
    }
 
