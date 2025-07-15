@@ -3,10 +3,12 @@ package es.jorgemon.service;
 import java.io.File;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -27,8 +29,8 @@ public class EventsAndSourcesLoader {
    private static final ExecutorService executor = Executors
          .newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 
-   public static final Map<String, Source> sources = new HashMap<>();
-   public static final List<Event> events = new ArrayList<>();
+   public static final Map<String, Source> sources = new ConcurrentHashMap<>();
+   public static final List<Event> events = Collections.synchronizedList(new ArrayList<>());
 
    public static void load() {
       long start = System.currentTimeMillis();
