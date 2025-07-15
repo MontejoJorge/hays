@@ -7,9 +7,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
-import es.jorgemon.model.Event;
-import es.jorgemon.repository.EventsRepository;
 import es.jorgemon.dto.GetEventsRequestDto;
+import es.jorgemon.dto.GetEventsResponseDto;
+import es.jorgemon.model.Event;
+import es.jorgemon.model.Pagination;
+import es.jorgemon.repository.EventsRepository;
 
 public class Controller {
 
@@ -34,8 +36,17 @@ public class Controller {
          }
 
          List<Event> events = EventsRepository.getEvents(filter);
+         long totalItems = EventsRepository.getTotalEventCount(filter);
 
-         return objectMapper.writeValueAsString(events);
+         Pagination<Event> pagination = new Pagination<>(
+            filter.getPage(),
+            filter.getPageSize(),
+            totalItems,
+            events
+         );
+
+         GetEventsResponseDto response = new GetEventsResponseDto(pagination);
+         return objectMapper.writeValueAsString(response);
       } catch (Exception e) {
          throw new RuntimeException("Error processing request: " + e.getMessage(), e);
       }

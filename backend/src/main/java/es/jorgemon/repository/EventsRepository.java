@@ -19,4 +19,14 @@ public class EventsRepository {
          .limit(filter.getPageSize())
          .toList();
    }
+
+   public static long getTotalEventCount(GetEventsRequestDto filter) {
+      return EventsAndSourcesLoader.events.stream()
+         .filter(event -> filter.getSourceId() == null || event.getSourceId().equals(filter.getSourceId()))
+         .filter(event -> filter.getStartDate() == null || !event.getTimestamp().isBefore(filter.getStartDate()))
+         .filter(event -> filter.getEndDate() == null || !event.getTimestamp().isAfter(filter.getEndDate()))
+         .filter(event -> filter.getMinValue() == null || event.getValue() >= filter.getMinValue())
+         .filter(event -> filter.getMaxValue() == null || event.getValue() <= filter.getMaxValue())
+         .count();
+   }
 }
