@@ -2,57 +2,10 @@ import L from 'leaflet';
 
 import type { Event, EventMarker, Source, SourceMarker } from '../../../types';
 
-const iconCommonOptions = {
-  iconSize: [25, 41] as [number, number],
-  iconAnchor: [12, 41] as [number, number],
-  popupAnchor: [1, -34] as [number, number],
-  shadowSize: [41, 41] as [number, number],
-};
-
-const blueIcon = new L.Icon({
-  iconUrl:
-    'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-blue.png',
-  ...iconCommonOptions,
-});
-
-const greenIcon = new L.Icon({
-  iconUrl:
-    'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-green.png',
-  ...iconCommonOptions,
-});
-
-export const drawEventsMarkers = (
-  events: Event[],
-  setEventMarkers: React.Dispatch<React.SetStateAction<EventMarker[]>>,
-  leafletMapRef: React.RefObject<L.Map | null>,
-) => {
-  events.forEach((event) => {
-    const marker = L.marker([event.location.lat, event.location.lon], {
-      icon: blueIcon,
-    }) as EventMarker;
-    marker.id = event.id;
-    marker.addTo(leafletMapRef.current!);
-    setEventMarkers((prev) => [...prev, marker]);
-  });
-};
-
-export const drawSourcesMarkers = (
-  sources: Source[],
-  setSourceMarkers: React.Dispatch<React.SetStateAction<SourceMarker[]>>,
-  leafletMapRef: React.RefObject<L.Map | null>,
-) => {
-  sources.forEach((source) => {
-    const marker = L.marker([source.location.lat, source.location.lon], {
-      icon: greenIcon,
-    }) as SourceMarker;
-    marker.id = source.id;
-    marker.addTo(leafletMapRef.current!);
-    setSourceMarkers((prev) => [...prev, marker]);
-  });
-};
-
 export const createEventClickHandler = (
   eventMarker: EventMarker,
+  setEventMarkers: React.Dispatch<React.SetStateAction<EventMarker[]>>,
+  setSourceMarkers: React.Dispatch<React.SetStateAction<SourceMarker[]>>,
   events: Event[],
   sources: Source[],
   leafletMapRef: React.RefObject<L.Map | null>,
@@ -61,12 +14,35 @@ export const createEventClickHandler = (
   eventMarker.on('click', () => {
     if (!leafletMapRef.current) return;
 
+    // remove all other event markers
+    setEventMarkers((prevMarkers) => {
+      prevMarkers.forEach((marker) => {
+        if (marker !== eventMarker) {
+          marker.remove();
+        }
+      });
+      return [eventMarker];
+    });
+
     linesRef.current.forEach((line) => line.remove());
     linesRef.current = [];
 
     const event = events.find((evt) => evt.id === eventMarker.id);
     const source = sources.find((src) => event?.sourceId === src.id);
     if (!event || !source) return;
+
+    // remove all other source markers
+    setSourceMarkers((prevMarkers) => {
+      prevMarkers.forEach((marker) => {
+        if (marker.id !== source.id) {
+          marker.remove();
+        }
+      });
+      const sourceMarker = prevMarkers.find(
+        (marker) => marker.id === source.id,
+      );
+      return sourceMarker ? [sourceMarker] : [];
+    });
 
     const line = L.polyline(
       [
@@ -82,12 +58,24 @@ export const createEventClickHandler = (
 
 export const createSourceClickHandler = (
   sourceMarker: SourceMarker,
+  setSourceMarkers: React.Dispatch<React.SetStateAction<SourceMarker[]>>,
+  setEventMarkers: React.Dispatch<React.SetStateAction<EventMarker[]>>,
   events: Event[],
   leafletMapRef: React.RefObject<L.Map | null>,
   linesRef: React.RefObject<L.Polyline[]>,
 ) => {
   sourceMarker.on('click', () => {
     if (!leafletMapRef.current) return;
+
+    // remove all other source markers
+    setSourceMarkers((prevMarkers) => {
+      prevMarkers.forEach((marker) => {
+        if (marker !== sourceMarker) {
+          marker.remove();
+        }
+      });
+      return [sourceMarker];
+    });
 
     linesRef.current.forEach((line) => line.remove());
     linesRef.current = [];
@@ -97,6 +85,18 @@ export const createSourceClickHandler = (
     const relatedEvents = events.filter(
       (event) => event.sourceId === sourceMarker.id,
     );
+
+    // remove all other event markers
+    setEventMarkers((prevMarkers) => {
+      prevMarkers.forEach((marker) => {
+        if (!relatedEvents.some((event) => event.id === marker.id)) {
+          marker.remove();
+        }
+      });
+      return prevMarkers.filter((marker) =>
+        relatedEvents.some((event) => event.id === marker.id),
+      );
+    });
 
     const lines = relatedEvents.map((event) => {
       const line = L.polyline(
@@ -117,15 +117,18 @@ export const createSourceClickHandler = (
 export class ResetMapButton extends L.Control {
   linesRef: React.RefObject<L.Polyline[]>;
   leafletMapRef: React.RefObject<L.Map | null>;
+  setResetKey: React.Dispatch<React.SetStateAction<number>>;
 
   constructor(
     linesRef: React.RefObject<L.Polyline[]>,
     leafletMapRef: React.RefObject<L.Map | null>,
+    setResetKey: React.Dispatch<React.SetStateAction<number>>,
     options?: L.ControlOptions,
   ) {
     super(options);
     this.linesRef = linesRef;
     this.leafletMapRef = leafletMapRef;
+    this.setResetKey = setResetKey;
   }
 
   onAdd() {
@@ -148,6 +151,8 @@ export class ResetMapButton extends L.Control {
 
       if (this.leafletMapRef.current) {
         this.leafletMapRef.current.setView([40.4168, -3.7038], 6); // Default location and zoom
+
+        this.setResetKey((prevKey) => prevKey + 1);
       }
     });
 
