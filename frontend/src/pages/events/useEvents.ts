@@ -13,6 +13,8 @@ const useEvents = () => {
     value: searchParams.get('value') || '',
     startDate: searchParams.get('dateStart') || '',
     endDate: searchParams.get('dateEnd') || '',
+    orderBy: searchParams.get('orderBy') || '',
+    orderDirection: searchParams.get('orderDirection') || '',
     page: parseInt(searchParams.get('page') || '1', 10),
     pageSize: parseInt(searchParams.get('pageSize') || '10', 10),
   };

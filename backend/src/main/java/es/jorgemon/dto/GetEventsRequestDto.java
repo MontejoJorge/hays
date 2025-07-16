@@ -7,10 +7,11 @@ public class GetEventsRequestDto {
    private String sourceId;
    private OffsetDateTime startDate;
    private OffsetDateTime endDate;
-   private Integer minValue;
-   private Integer maxValue;
+   private Integer value;
    private Integer page;
    private Integer pageSize;
+   private String orderBy;
+   private String orderDirection;
 
    public String getId() {
       return id;
@@ -44,20 +45,12 @@ public class GetEventsRequestDto {
       this.endDate = endDate;
    }
 
-   public Integer getMinValue() {
-      return minValue;
+   public Integer getValue() {
+      return value;
    }
 
-   public void setMinValue(Integer minValue) {
-      this.minValue = minValue;
-   }
-
-   public Integer getMaxValue() {
-      return maxValue;
-   }
-
-   public void setMaxValue(Integer maxValue) {
-      this.maxValue = maxValue;
+   public void setValue(Integer value) {
+      this.value = value;
    }
 
    public Integer getPage() {
@@ -74,5 +67,21 @@ public class GetEventsRequestDto {
 
    public void setPageSize(Integer pageSize) {
       this.pageSize = pageSize;
+   }
+
+   public String getOrderBy() {
+      return orderBy;
+   }
+
+   public void setOrderBy(String orderBy) {
+      this.orderBy = orderBy;
+   }
+
+   public String getOrderDirection() {
+      return orderDirection;
+   }
+
+   public void setOrderDirection(String orderDirection) {
+      this.orderDirection = orderDirection;
    }
 }
