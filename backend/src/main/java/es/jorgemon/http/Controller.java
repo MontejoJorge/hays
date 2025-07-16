@@ -11,7 +11,9 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import es.jorgemon.dto.GetEventsRequestDto;
 import es.jorgemon.model.Event;
 import es.jorgemon.model.Pagination;
+import es.jorgemon.model.Source;
 import es.jorgemon.repository.EventsRepository;
+import es.jorgemon.repository.SourcesRepository;
 
 public class Controller {
 
@@ -22,6 +24,7 @@ public class Controller {
 
    public static void registerRoutes(WebServer webServer) {
       webServer.registerEndpoint("/events", Controller::getEvents);
+      webServer.registerEndpoint("/sources", Controller::getSources);
    }
 
    public static String getEvents(Map<String, String> params) {
@@ -48,8 +51,16 @@ public class Controller {
 
          return objectMapper.writeValueAsString(pagination);
       } catch (Exception e) {
-         throw new RuntimeException("Error processing request: " + e.getMessage(), e);
+         throw new RuntimeException(e.getMessage(), e);
       }
    }
 
+   public static String getSources(Map<String, String> params) {
+      try {
+         List<Source> sources = SourcesRepository.getSources();
+         return objectMapper.writeValueAsString(sources);
+      } catch (Exception e) {
+         throw new RuntimeException(e.getMessage(), e);
+      }
+   }
 }
