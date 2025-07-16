@@ -1,4 +1,4 @@
-import { EventsTable, Paginator } from '../../components/';
+import { EventsFilter, EventsTable, Paginator } from '../../components/';
 import useEvents from '../../hooks/useEvents';
 
 const EventsPage = () => {
@@ -7,6 +7,7 @@ const EventsPage = () => {
   return (
     <>
       <h1>Events Page</h1>
+      <EventsFilter />
       <EventsTable data={data} />
       <Paginator
         currentPage={currentPage}

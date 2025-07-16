@@ -1,8 +1,4 @@
-interface Event {
-  id: string;
-  timestamp: string;
-  value: number;
-}
+import type { Event } from '../../../types';
 
 interface EventsTableProps {
   data: Event[];
@@ -14,16 +10,20 @@ export const EventsTable = ({ data }: EventsTableProps) => {
       <thead>
         <tr>
           <th>ID</th>
-          <th>Timestamp</th>
           <th>Value</th>
+          <th>Timestamp</th>
+          <th>Location</th>
         </tr>
       </thead>
       <tbody>
         {data.map((event) => (
           <tr key={event.id}>
             <td>{event.id.split('-')[0]}</td>
-            <td>{new Date(event.timestamp).toLocaleString()}</td>
             <td>{event.value}</td>
+            <td>{new Date(event.timestamp).toLocaleString()}</td>
+            <td>
+              {event.location.lat.toFixed(2)}, {event.location.lon.toFixed(2)}
+            </td>
           </tr>
         ))}
       </tbody>
