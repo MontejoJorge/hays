@@ -59,6 +59,10 @@ const MapPage = () => {
 
   return (
     <>
+      <div>
+        Para poder ver las relacciones entre eventos y fuentes, haz click en un
+        evento en el mapa.
+      </div>
       <EventMap
         events={allEvents}
         sources={sourcesQuery.data || []}
