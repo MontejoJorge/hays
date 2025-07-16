@@ -3,6 +3,7 @@ package es.jorgemon.dto;
 import java.time.OffsetDateTime;
 
 public class GetEventsRequestDto {
+   private String id;
    private String sourceId;
    private OffsetDateTime startDate;
    private OffsetDateTime endDate;
@@ -10,6 +11,14 @@ public class GetEventsRequestDto {
    private Integer maxValue;
    private Integer page;
    private Integer pageSize;
+
+   public String getId() {
+      return id;
+   }
+
+   public void setId(String id) {
+      this.id = id;
+   }
 
    public String getSourceId() {
       return sourceId;

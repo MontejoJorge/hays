@@ -10,6 +10,7 @@ public class EventsRepository {
 
    public static List<Event> getEvents(GetEventsRequestDto filter) {
       return EventsAndSourcesLoader.events.stream()
+         .filter(event -> filter.getId() == null || event.getId().contains(filter.getId()))
          .filter(event -> filter.getSourceId() == null || event.getSourceId().equals(filter.getSourceId()))
          .filter(event -> filter.getStartDate() == null || !event.getTimestamp().isBefore(filter.getStartDate()))
          .filter(event -> filter.getEndDate() == null || !event.getTimestamp().isAfter(filter.getEndDate()))
@@ -22,6 +23,7 @@ public class EventsRepository {
 
    public static long getTotalEventCount(GetEventsRequestDto filter) {
       return EventsAndSourcesLoader.events.stream()
+         .filter(event -> filter.getId() == null || event.getId().contains(filter.getId()))
          .filter(event -> filter.getSourceId() == null || event.getSourceId().equals(filter.getSourceId()))
          .filter(event -> filter.getStartDate() == null || !event.getTimestamp().isBefore(filter.getStartDate()))
          .filter(event -> filter.getEndDate() == null || !event.getTimestamp().isAfter(filter.getEndDate()))
