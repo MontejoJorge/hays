@@ -5,8 +5,8 @@ import api from '.';
 export const getEvents = async (params: EventFilter) => {
   const formattedParams = {
     ...params,
-    startDate: dateToOffsetDateTime(params.startDate),
-    endDate: dateToOffsetDateTime(params.endDate),
+    startDate: params.startDate ? dateToOffsetDateTime(params.startDate) : undefined,
+    endDate: params.endDate ? dateToOffsetDateTime(params.endDate) : undefined,
   };
 
   const response = await api.get('/events', { params: formattedParams });
