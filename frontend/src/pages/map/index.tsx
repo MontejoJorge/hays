@@ -36,6 +36,7 @@ const MapPage = () => {
     if (eventsQuery.hasNextPage && !eventsQuery.isFetchingNextPage) {
       eventsQuery.fetchNextPage();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     eventsQuery.hasNextPage,
     eventsQuery.isFetchingNextPage,
