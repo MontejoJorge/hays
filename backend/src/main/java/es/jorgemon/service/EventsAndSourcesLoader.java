@@ -5,9 +5,7 @@ import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -28,7 +26,7 @@ public class EventsAndSourcesLoader {
    private static final ExecutorService executor = Executors
          .newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 
-   public static final Map<String, Source> sources = new ConcurrentHashMap<>();
+   public static final List<Source> sources = Collections.synchronizedList(new ArrayList<>());
    public static final List<Event> events = Collections.synchronizedList(new ArrayList<>());
 
    public static void load() {
@@ -75,7 +73,7 @@ public class EventsAndSourcesLoader {
             Location location = new Location(lat, lon);
             Source source = new Source(id, name, location);
 
-            sources.put(id, source);
+            sources.add(source);
          }
 
       } catch (Exception e) {
