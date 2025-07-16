@@ -6,7 +6,7 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter } from 'react-router';
 
-import AppRoutes from './routes';
+import App from './App';
 
 const queryClient = new QueryClient();
 
@@ -14,7 +14,7 @@ createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <BrowserRouter>
       <QueryClientProvider client={queryClient}>
-        <AppRoutes />
+        <App />
         {import.meta.env.MODE === 'development' && (
           <ReactQueryDevtools initialIsOpen={false} />
         )}
