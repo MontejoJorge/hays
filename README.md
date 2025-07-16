@@ -1,46 +1,31 @@
-# Prueba de Acceso – Desarrollador/a Fullstack (Java + React)
+# Prueba tecnica Jorge Montejo
 
-## Descripción General
+Buenas!
+Este es el repositorio para la prueba tecnica de Ariadna Grid.
 
-En Ariadna Grid trabajamos con grandes volúmenes de eventos, cada uno asociado a una fuente, un valor y una marca temporal. Queremos evaluar tu capacidad para diseñar e implementar una solución profesional, eficiente y mantenible, tanto en el backend como en el frontend, sin utilizar bases de datos.
+Me gustaria indicar que debido al poco tiempo para realizar dicha prueba, ni el codigo ni la documentacion del mismo son una representacion fiel a como trabajo en el dia a dia.
 
-## Requisitos
+## Instrucciones de ejecucion
 
 ### Backend (Java)
 
-- Implementa una API REST en Java (versión 8 o superior, sin frameworks complejos ni bases de datos, ni siquiera en memoria tipo H2).
-- Los datos deben cargarse desde archivos (mínimo 6 ficheros de eventos, al menos 1000 eventos en total, y un fichero de fuentes).
-- La carga de datos debe realizarse de forma paralela para optimizar tiempos.
-- Estructuras de datos:
-  - **Fuente**: id, nombre, coordenadas (latitud, longitud)
-  - **Evento**: id, fuente_id, timestamptz, valor, coordenadas (latitud, longitud)
+Dentro de la carpeta de backend ejecutar `mvn clean package` para generar el .jar
 
-Utiliza el mínimo de librerías externas posible, pero será necesario incluir tests unitarios que comprueben la funcionalidad de carga y endpoints desarrollados. Incluye a su vez, un README para indicarnos la forma de ejecución.
+y despues ejecutarlo con `java -jar .\target\backend-1.0.jar`
 
 ### Frontend (React)
 
-- Implementa una interfaz con dos vistas principales:
-  1. **Tabla de eventos y fuentes**:  
-     - Tabla paginada y ordenable por cualquier columna.
-     - Filtrado por cada columna, y rango de fechas.
-     - Filtrado por nombre de fuente.
-     - Muestra los eventos y su fuente asociada.
-  2. **Mapa**:  
-     - Muestra en un mapa los eventos y las fuentes usando sus coordenadas.
-     - Los iconos de los eventos y las fuentes, deben ser diferentes (diferente color es suficiente). Además cada evento deberá estar unido por una línea a su fuente asociada.
-- La interfaz debe consumir exclusivamente la API REST JAVA desarrollada.
-- Incluye instrucciones de ejecución.
+Dentro de la carpeta de fronend ejecutar `pnpm i` (en caso de no tener pnpm instalarlo con npm i -g pnpm)
 
-### Restricciones
-- No se permite el uso de bases de datos de ningún tipo.
-- Se valorará la calidad del código, la eficiencia, la claridad y la documentación.
+### Docker
 
-## Entregables
-- Código fuente completo del backend y frontend.
-- Archivos de datos utilizados para la carga.
-- Instrucciones de ejecución para ambos componentes.
-- Breve documentación explicando las decisiones técnicas tomadas.
+Tambien he creado un docker-compose para arrancarlo si es que lo teneis instalado.
 
-## Tiempo de entrega
-- Tienes un plazo de 2 días para completar la prueba.
-- Entrega el proyecto en un repositorio git: Github, gitlab.
+`docker-compose up`
+
+## Comentarios
+- He optado por usar java 21 ya que es la que suelo utilizar para algun pequeño proyecto personal y es LTS
+- Como los eventos que habia que cargar eran al menos 1000, los he creado de forma aleatoria en la zona de la peninsula iberica. Estan en la ruta `backend\src\main\resources` y si se eliminan al arrancar se crearan nuevos eventos y fuentes
+- Dado que no se podian usar frameworks para el web server he usado com.sun.net.httpserver y he creado la clase `WebServer.java` para manejar ahi los enpoint que registre en `Contoller.java`
+- La parte de testing la tengo bastante verde, ya que es algo con lo que apenas he trabajado
+- Para la vista de el mapa, he considerado mejor mostrar solo las lineas entre fuentes y eventos cuando haces **click** en alguno de ellos, ya que al haber tantos eventos se llenaba todo de lineas y no se veia con claridad

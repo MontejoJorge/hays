@@ -104,8 +104,6 @@ public class EventsAndSourcesLoader {
       // Wait for all events to be loaded
       CompletableFuture<Void> allFutures = CompletableFuture.allOf(futures.toArray(new CompletableFuture[0]));
       allFutures.join();
-
-      System.out.println("Loaded " + events.size() + " events from " + files.length + " files.");
    }
 
    private static void loadEventsFromFile(File file) {
