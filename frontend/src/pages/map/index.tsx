@@ -1,9 +1,10 @@
-import { useInfiniteQuery } from '@tanstack/react-query';
-import { useEffect } from 'react';
+import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
+import { useEffect, useMemo } from 'react';
 
 import { getEvents } from '../../api/events';
+import { getSources } from '../../api/sources';
 import { EventMap } from '../../components/organisms/EventMap';
-import type { Pagination } from '../../types';
+import type { Event, Pagination, Source } from '../../types';
 
 const MapPage = () => {
   const filter = { pageSize: 100 };
@@ -21,20 +22,39 @@ const MapPage = () => {
     },
   });
 
+  const sourcesQuery = useQuery<Source[]>({
+    queryKey: ['sources'],
+    queryFn: getSources,
+  });
+
+  const allEvents = useMemo(
+    () => eventsQuery.data?.pages.flatMap((page) => page.data) || [],
+    [eventsQuery.data],
+  );
+
   useEffect(() => {
-    const fetchAllPages = () => {
-      while (eventsQuery.hasNextPage) {
-        eventsQuery.fetchNextPage();
-      }
-    };
-    if (eventsQuery.hasNextPage) {
-      fetchAllPages();
+    if (eventsQuery.hasNextPage && !eventsQuery.isFetchingNextPage) {
+      eventsQuery.fetchNextPage();
     }
-  }, [eventsQuery.hasNextPage]);
+  }, [
+    eventsQuery.hasNextPage,
+    eventsQuery.isFetchingNextPage,
+    eventsQuery.fetchNextPage,
+  ]);
+
+  const isLoadingAll =
+    eventsQuery.isLoading ||
+    eventsQuery.isFetchingNextPage ||
+    eventsQuery.hasNextPage ||
+    sourcesQuery.isLoading;
+
+  if (isLoadingAll) {
+    return <div>Cargando mapa y eventos...</div>;
+  }
 
   return (
     <>
-      <EventMap />
+      <EventMap events={allEvents} sources={sourcesQuery.data || []} />
     </>
   );
 };
