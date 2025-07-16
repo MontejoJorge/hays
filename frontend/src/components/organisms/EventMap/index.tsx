@@ -34,6 +34,7 @@ const greenIcon = new L.Icon({
 export const EventMap = ({ events, sources }: EventMapProps) => {
   const mapRef = useRef<HTMLDivElement | null>(null);
   const leafletMapRef = useRef<L.Map | null>(null);
+  const linesRef = useRef<L.Polyline[]>([]);
 
   useEffect(() => {
     if (mapRef.current && !leafletMapRef.current) {
@@ -44,7 +45,7 @@ export const EventMap = ({ events, sources }: EventMapProps) => {
         {
           maxZoom: 20,
           subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
-        }
+        },
       );
 
       googleStreets.addTo(leafletMapRef.current);
@@ -60,11 +61,35 @@ export const EventMap = ({ events, sources }: EventMapProps) => {
 
   useEffect(() => {
     if (leafletMapRef.current) {
+      const eventMarkers: L.Marker[] = [];
+      const sourceMarkers: L.Marker[] = [];
+
       events.forEach((event) => {
         const marker = L.marker([event.location.lat, event.location.lon], {
           icon: blueIcon,
         });
         marker.addTo(leafletMapRef.current!);
+        eventMarkers.push(marker);
+
+        marker.on('click', () => {
+          linesRef.current.forEach((line) => line.remove());
+          linesRef.current = [];
+
+          const source = sources.find((src) => src.id === event.sourceId);
+          if (source) {
+            const line = L.polyline(
+              [
+                [event.location.lat, event.location.lon],
+                [source.location.lat, source.location.lon],
+              ],
+              {
+                color: 'blue',
+              },
+            );
+            line.addTo(leafletMapRef.current!);
+            linesRef.current.push(line);
+          }
+        });
       });
 
       sources.forEach((source) => {
@@ -72,6 +97,30 @@ export const EventMap = ({ events, sources }: EventMapProps) => {
           icon: greenIcon,
         });
         marker.addTo(leafletMapRef.current!);
+        sourceMarkers.push(marker);
+
+        marker.on('click', () => {
+          linesRef.current.forEach((line) => line.remove());
+          linesRef.current = [];
+
+          const relatedLines = events
+            .filter((event) => event.sourceId === source.id)
+            .map((event) => {
+              const line = L.polyline(
+                [
+                  [event.location.lat, event.location.lon],
+                  [source.location.lat, source.location.lon],
+                ],
+                {
+                  color: 'blue',
+                },
+              );
+              line.addTo(leafletMapRef.current!);
+              return line;
+            });
+
+          linesRef.current.push(...relatedLines);
+        });
       });
     }
   }, [events, sources]);
