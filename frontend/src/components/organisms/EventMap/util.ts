@@ -113,3 +113,44 @@ export const createSourceClickHandler = (
     linesRef.current.push(...lines);
   });
 };
+
+export class ResetMapButton extends L.Control {
+  linesRef: React.RefObject<L.Polyline[]>;
+  leafletMapRef: React.RefObject<L.Map | null>;
+
+  constructor(
+    linesRef: React.RefObject<L.Polyline[]>,
+    leafletMapRef: React.RefObject<L.Map | null>,
+    options?: L.ControlOptions,
+  ) {
+    super(options);
+    this.linesRef = linesRef;
+    this.leafletMapRef = leafletMapRef;
+  }
+
+  onAdd() {
+    const container = L.DomUtil.create('div', 'leaflet-bar leaflet-control');
+
+    const btn = L.DomUtil.create('a', '', container);
+    btn.innerHTML = 'Reset';
+    btn.style.paddingLeft = '10px';
+    btn.style.paddingRight = '10px';
+    btn.style.cursor = 'pointer';
+
+    L.DomEvent.on(btn, 'click', (e) => {
+      L.DomEvent.preventDefault(e);
+      L.DomEvent.stopPropagation(e);
+
+      if (this.linesRef.current) {
+        this.linesRef.current.forEach((line) => line.remove());
+        this.linesRef.current = [];
+      }
+
+      if (this.leafletMapRef.current) {
+        this.leafletMapRef.current.setView([40.4168, -3.7038], 6); // Default location and zoom
+      }
+    });
+
+    return container;
+  }
+}
