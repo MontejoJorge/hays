@@ -1,0 +1,20 @@
+services:
+  backend:
+    build: 
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: hays-backend
+    ports:
+      - "36981:36981"
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: hays-frontend
+    ports:
+      - "53181:80"
+    depends_on:
+      - backend
+    restart: unless-stopped

@@ -20,7 +20,7 @@ public class WebServer {
    public static void main() {
       WebServer webServer = new WebServer();
       Controller.registerRoutes(webServer);
-      webServer.startServer(8080);
+      webServer.startServer(36981);
    }
 
    public void startServer(int port) {
