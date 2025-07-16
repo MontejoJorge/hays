@@ -1,36 +1,35 @@
-import { keepPreviousData, useQuery } from '@tanstack/react-query';
-import React from 'react';
+import type { ColumnDef } from '@tanstack/react-table';
 
-import { getEvents } from '../../api/events';
 import { Paginator } from '../../components/';
-import type { Event, Pagination } from '../../types';
+import Table from '../../components/Table';
+import useEvents from '../../hooks/useEvents';
+import type { Event } from '../../types';
+import Sheet from '@mui/joy/Sheet/Sheet';
 
 const EventsPage = () => {
-  const [currentPage, setCurrentPage] = React.useState(1);
+  const { currentPage, totalPages, data, handlePageChange } = useEvents();
 
-  const { data } = useQuery<Pagination<Event>>({
-    queryKey: ['events', currentPage],
-    queryFn: () => getEvents({ page: currentPage }),
-    placeholderData: keepPreviousData,
-  });
-
-  const totalPages = data?.totalPages || 1;
-
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-  };
+  const columns: ColumnDef<Event>[] = [
+    {
+      accessorKey: 'id',
+      header: 'ID',
+      cell: ({ getValue }) => (getValue() as string).split('-')[0],
+    },
+    {
+      accessorKey: 'timestamp',
+      header: 'Timestamp',
+      cell: ({ getValue }) => new Date(getValue() as string).toLocaleString(),
+    },
+    {
+      accessorKey: 'value',
+      header: 'Value',
+    },
+  ];
 
   return (
-    <>
+    <Sheet variant="soft">
       <h1>Events Page</h1>
-      <ul>
-        {data?.data.map((event: Event) => (
-          <li key={event.id}>
-            <strong>{event.id}</strong> -{' '}
-            {new Date(event.timestamp).toLocaleString()} - Value: {event.value}
-          </li>
-        ))}
-      </ul>
+      <Table data={data} columns={columns} />
       <Paginator
         currentPage={currentPage}
         totalPages={totalPages}
@@ -39,7 +38,7 @@ const EventsPage = () => {
         hasNextPage={currentPage < totalPages}
         hasPreviousPage={currentPage > 1}
       />
-    </>
+    </Sheet>
   );
 };
 
