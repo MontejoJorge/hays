@@ -9,7 +9,7 @@ const useEvents = () => {
 
   const filter: EventFilter = {
     id: searchParams.get('id') || '',
-    source: searchParams.get('source') || '',
+    sourceId: searchParams.get('sourceId') || '',
     value: searchParams.get('value') || '',
     startDate: searchParams.get('dateStart') || '',
     endDate: searchParams.get('dateEnd') || '',

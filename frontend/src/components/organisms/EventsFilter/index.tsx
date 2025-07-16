@@ -1,9 +1,17 @@
+import { useQuery } from '@tanstack/react-query';
 import { useSearchParams } from 'react-router';
 
+import { getSources } from '../../../api/sources';
+import type { Source } from '../../../types/source';
 import styles from './style.module.scss';
 
 export const EventsFilter = () => {
   const [searchParams, setSearchParams] = useSearchParams();
+
+  const { data: sources } = useQuery<Source[]>({
+    queryKey: ['sources'],
+    queryFn: getSources,
+  });
 
   const updateFilter = (key: string, value: string) => {
     const newParams = new URLSearchParams(searchParams);
@@ -43,13 +51,22 @@ export const EventsFilter = () => {
       </div>
       <div>
         <label htmlFor="source">Source:</label>
-        <input
-          type="text"
-          id="source"
-          value={searchParams.get('source') || ''}
-          onChange={(e) => updateFilter('source', e.target.value)}
-          style={{ width: '80px' }}
-        />
+        <select
+          id="sourceId"
+          value={searchParams.get('sourceId') || ''}
+          onChange={(e) => updateFilter('sourceId', e.target.value)}
+          style={{ width: '120px' }}
+        >
+          <option value="">All</option>
+          {sources
+            ?.slice()
+            .sort((a, b) => a.name.localeCompare(b.name))
+            .map((source) => (
+              <option key={source.id} value={source.id}>
+                {source.name}
+              </option>
+            ))}
+        </select>
       </div>
       <div>
         <label htmlFor="dateStart">Start Date:</label>

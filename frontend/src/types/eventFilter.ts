@@ -1,6 +1,6 @@
 export interface EventFilter {
   id: string;
-  source: string;
+  sourceId: string;
   value: string;
   startDate: string;
   endDate: string;
