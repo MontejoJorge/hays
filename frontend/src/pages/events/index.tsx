@@ -1,23 +1,22 @@
 import { EventsFilter, EventsTable, Paginator } from '../../components/';
 import useEvents from '../../hooks/useEvents';
+import styles from './style.module.scss';
 
 const EventsPage = () => {
-  const { currentPage, totalPages, data, setCurrentPage } = useEvents();
+  const { totalPages, data, currentPage } = useEvents();
 
   return (
-    <>
+    <div className={styles.container}>
       <h1>Events Page</h1>
       <EventsFilter />
       <EventsTable data={data} />
       <Paginator
-        currentPage={currentPage}
         totalPages={totalPages}
-        fetchNextPage={() => setCurrentPage(currentPage + 1)}
-        fetchPreviousPage={() => setCurrentPage(currentPage - 1)}
+        currentPage={currentPage}
         hasNextPage={currentPage < totalPages}
         hasPreviousPage={currentPage > 1}
       />
-    </>
+    </div>
   );
 };
 
