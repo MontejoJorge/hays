@@ -20,6 +20,11 @@ export const Paginator = ({
     setParams(params);
   };
 
+  const changePageSize = (size: number) => {
+    params.set('pageSize', String(size));
+    setParams(params);
+  };
+
   return (
     <div>
       <button
@@ -37,6 +42,16 @@ export const Paginator = ({
       >
         Next
       </button>
+      <label htmlFor="pageSize">Results per page:</label>
+      <select
+        id="pageSize"
+        onChange={(e) => changePageSize(Number(e.target.value))}
+        defaultValue={params.get('pageSize') || '10'}
+      >
+        <option value="10">10</option>
+        <option value="20">20</option>
+        <option value="30">30</option>
+      </select>
     </div>
   );
 };

@@ -15,6 +15,10 @@ export const EventsFilter = () => {
     setSearchParams(newParams);
   };
 
+  const clearFilters = () => {
+    setSearchParams(new URLSearchParams());
+  };
+
   return (
     <div className={styles.filterContainer}>
       <div>
@@ -64,6 +68,11 @@ export const EventsFilter = () => {
           value={searchParams.get('dateEnd') || ''}
           onChange={(e) => updateFilter('dateEnd', e.target.value)}
         />
+      </div>
+      <div>
+        <button onClick={clearFilters} className={styles.clearButton}>
+          Clear Filters
+        </button>
       </div>
     </div>
   );
