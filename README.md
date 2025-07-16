@@ -13,6 +13,8 @@ Dentro de la carpeta de backend ejecutar `mvn clean compile`
 
 y despues ejecutarlo con `mvn exec:java`
 
+Para ejecutar los tests `mvn test`
+
 ### Frontend (React)
 
 Dentro de la carpeta de fronend ejecutar `pnpm i` (en caso de no tener pnpm instalarlo con npm i -g pnpm)
