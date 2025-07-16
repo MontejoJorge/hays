@@ -15,15 +15,11 @@ const useEvents = () => {
 
   const totalPages = data?.totalPages || 1;
 
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-  };
-
   return {
     currentPage,
     totalPages,
     data: data?.data || [],
-    handlePageChange,
+    setCurrentPage,
   };
 };
 
