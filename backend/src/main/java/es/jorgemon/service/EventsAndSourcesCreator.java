@@ -22,8 +22,8 @@ public class EventsAndSourcesCreator {
    public static final double MAX_LON = 3.5;
 
    public static void main() {
-      createDirectory("backend/src/main/resources/events");
-      createDirectory("backend/src/main/resources/sources");
+      createDirectory("src/main/resources/events");
+      createDirectory("src/main/resources/sources");
 
       createSources();
       createEvents();
@@ -39,7 +39,7 @@ public class EventsAndSourcesCreator {
    }
 
    private static void createSources() {
-      String sourcesFilePath = "backend/src/main/resources/sources/sources.xml";
+      String sourcesFilePath = "src/main/resources/sources/sources.xml";
       File sourcesFile = new File(sourcesFilePath);
 
       if (sourcesFile.exists()) {
@@ -68,7 +68,7 @@ public class EventsAndSourcesCreator {
    }
 
    private static void createEvents() {
-      String sourcesFilePath = "backend/src/main/resources/sources/sources.xml";
+      String sourcesFilePath = "src/main/resources/sources/sources.xml";
       File sourcesFile = new File(sourcesFilePath);
 
       if (!sourcesFile.exists()) {
@@ -81,7 +81,7 @@ public class EventsAndSourcesCreator {
          NodeList sourceNodes = sourcesDoc.getElementsByTagName("source");
 
          for (int fileIndex = 1; fileIndex <= 10; fileIndex++) {
-            String eventsFilePath = "backend/src/main/resources/events/events-" + fileIndex + ".xml";
+            String eventsFilePath = "src/main/resources/events/events-" + fileIndex + ".xml";
             File eventsFile = new File(eventsFilePath);
 
             // Skip if the events file already exists

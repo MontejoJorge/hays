@@ -9,9 +9,9 @@ Me gustaria indicar que debido al poco tiempo para realizar dicha prueba, ni el 
 
 ### Backend (Java)
 
-Dentro de la carpeta de backend ejecutar `mvn clean package` para generar el .jar
+Dentro de la carpeta de backend ejecutar `mvn clean compile`
 
-y despues ejecutarlo con `java -jar .\target\backend-1.0.jar`
+y despues ejecutarlo con `mvn exec:java`
 
 ### Frontend (React)
 

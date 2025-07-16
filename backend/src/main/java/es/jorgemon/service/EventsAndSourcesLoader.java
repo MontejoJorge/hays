@@ -44,7 +44,7 @@ public class EventsAndSourcesLoader {
    }
 
    public static void loadSources() {
-      File sourcesFile = new File("backend/src/main/resources/sources/sources.xml");
+      File sourcesFile = new File("src/main/resources/sources/sources.xml");
 
       if (!sourcesFile.exists()) {
          throw new RuntimeException("Sources file not found: " + sourcesFile.getAbsolutePath());
@@ -83,7 +83,7 @@ public class EventsAndSourcesLoader {
    }
 
    public static void loadEvents() {
-      File eventsDir = new File("backend/src/main/resources/events");
+      File eventsDir = new File("src/main/resources/events");
 
       if (!eventsDir.exists() || !eventsDir.isDirectory()) {
          throw new RuntimeException("Events directory not found: " + eventsDir.getAbsolutePath());
