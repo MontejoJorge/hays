@@ -1,4 +1,5 @@
 import type { Event } from '../../../types';
+import styles from './styles.module.scss';
 
 interface EventsTableProps {
   data: Event[];
@@ -6,8 +7,8 @@ interface EventsTableProps {
 
 export const EventsTable = ({ data }: EventsTableProps) => {
   return (
-    <table>
-      <thead>
+    <table className={styles.table}>
+      <thead className={styles.thead}>
         <tr>
           <th>ID</th>
           <th>Value</th>
@@ -17,11 +18,13 @@ export const EventsTable = ({ data }: EventsTableProps) => {
       </thead>
       <tbody>
         {data.map((event) => (
-          <tr key={event.id}>
-            <td>{event.id.split('-')[0]}</td>
-            <td>{event.value}</td>
-            <td>{new Date(event.timestamp).toLocaleString()}</td>
-            <td>
+          <tr key={event.id} className={styles.tr}>
+            <td className={styles.td}>{event.id.split('-')[0]}</td>
+            <td className={styles.td}>{event.value}</td>
+            <td className={styles.td}>
+              {new Date(event.timestamp).toLocaleString()}
+            </td>
+            <td className={styles.td}>
               {event.location.lat.toFixed(2)}, {event.location.lon.toFixed(2)}
             </td>
           </tr>
