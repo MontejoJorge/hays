@@ -7,6 +7,8 @@ Me gustaria indicar que debido al poco tiempo para realizar dicha prueba, ni el 
 
 ## Instrucciones de ejecucion
 
+_Para poder probarlo directamente sin tener que descargar y ejecutar, he desplegado esto en mi propio servidor: [https://hays.jorgemon.es/](https://hays.jorgemon.es/)_
+
 ### Backend (Java)
 
 Dentro de la carpeta de backend ejecutar `mvn clean compile`
