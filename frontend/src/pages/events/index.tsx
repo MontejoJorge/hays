@@ -1,6 +1,6 @@
 import { EventsFilter, EventsTable, Paginator } from '../../components/';
-import useEvents from '../../hooks/useEvents';
 import styles from './style.module.scss';
+import useEvents from './useEvents';
 
 const EventsPage = () => {
   const { totalPages, data, currentPage } = useEvents();

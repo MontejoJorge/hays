@@ -1,8 +1,8 @@
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { useSearchParams } from 'react-router';
 
-import { getEvents } from '../api/events';
-import type { Event, EventFilter, Pagination } from '../types';
+import { getEvents } from '../../api/events';
+import type { Event, EventFilter, Pagination } from '../../types';
 
 const useEvents = () => {
   const [searchParams] = useSearchParams();
