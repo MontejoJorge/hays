@@ -16,10 +16,10 @@ import java.time.OffsetDateTime;
 
 public class EventsAndSourcesCreator {
    // Peninsula iberica
-   private static final double MIN_LAT = 36.0;
-   private static final double MAX_LAT = 44.5;
-   private static final double MIN_LON = -10.0;
-   private static final double MAX_LON = 3.5;
+   public static final double MIN_LAT = 36.0;
+   public static final double MAX_LAT = 44.5;
+   public static final double MIN_LON = -10.0;
+   public static final double MAX_LON = 3.5;
 
    public static void main() {
       createDirectory("backend/src/main/resources/events");

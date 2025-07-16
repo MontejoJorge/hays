@@ -5,14 +5,21 @@ import es.jorgemon.http.WebServer;
 import es.jorgemon.service.EventsAndSourcesCreator;
 
 public class App {
-   public static void main(String[] args) {
+
+   public static void initialize() {
       // Initialize directories and files (if does not exist)
       EventsAndSourcesCreator.main();
 
       // Load sources and events
       EventsAndSourcesLoader.load();
+   }
 
-      // Start the basic web server
+   public static void startServer() {
       WebServer.main();
+   }
+
+   public static void main(String[] args) {
+      initialize();
+      startServer();
    }
 }
