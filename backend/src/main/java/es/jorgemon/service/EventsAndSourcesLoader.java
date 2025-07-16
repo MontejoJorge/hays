@@ -40,7 +40,7 @@ public class EventsAndSourcesLoader {
       combinedFuture.join();
 
       long end = System.currentTimeMillis();
-      System.out.println("Loaded sources and events in " + ((end - start) / 1000) + " seconds.");
+      System.out.println("Loaded sources and events in " + ((end - start) / 1000.0) + " seconds.");
    }
 
    public static void loadSources() {
@@ -57,7 +57,7 @@ public class EventsAndSourcesLoader {
          doc.getDocumentElement().normalize();
 
          NodeList nodeList = doc.getElementsByTagName("source");
-
+         
          for (int i = 0; i < nodeList.getLength(); i++) {
             Node node = nodeList.item(i);
             if (node.getNodeType() != Node.ELEMENT_NODE)
