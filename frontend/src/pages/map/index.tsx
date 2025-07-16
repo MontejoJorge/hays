@@ -1,5 +1,6 @@
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { useEffect, useMemo } from 'react';
+import { useSearchParams } from 'react-router';
 
 import { getEvents } from '../../api/events';
 import { getSources } from '../../api/sources';
@@ -7,6 +8,9 @@ import { EventMap } from '../../components/organisms/EventMap';
 import type { Event, Pagination, Source } from '../../types';
 
 const MapPage = () => {
+  const [searchParams] = useSearchParams();
+  const eventId = searchParams.get('eventId') || undefined;
+
   const filter = { pageSize: 100 };
 
   const eventsQuery = useInfiniteQuery<Pagination<Event>>({
@@ -55,7 +59,11 @@ const MapPage = () => {
 
   return (
     <>
-      <EventMap events={allEvents} sources={sourcesQuery.data || []} />
+      <EventMap
+        events={allEvents}
+        sources={sourcesQuery.data || []}
+        eventId={eventId}
+      />
     </>
   );
 };

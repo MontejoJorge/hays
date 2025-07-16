@@ -34,9 +34,10 @@ const defaultLocation: L.LatLngTuple = [40.4168, -3.7038]; // Madrid
 interface EventMapProps {
   events: Event[];
   sources: Source[];
+  eventId?: string;
 }
 
-export const EventMap = ({ events, sources }: EventMapProps) => {
+export const EventMap = ({ events, sources, eventId }: EventMapProps) => {
   const mapRef = useRef<HTMLDivElement | null>(null);
   const leafletMapRef = useRef<L.Map | null>(null);
   const linesRef = useRef<L.Polyline[]>([]);
@@ -79,21 +80,47 @@ export const EventMap = ({ events, sources }: EventMapProps) => {
 
   // Create markers
   useEffect(() => {
-    events.forEach((event) => {
-      const marker = L.marker([event.location.lat, event.location.lon], {
-        icon: blueIcon,
-      }) as EventMarker;
-      marker.id = event.id;
-      setEventMarkers((prev) => [...prev, marker]);
-    });
+    const activeEvent = events.find((event) => event.id === eventId);
+    if (activeEvent) {
+      const eventMarker = L.marker(
+        [activeEvent.location.lat, activeEvent.location.lon],
+        {
+          icon: blueIcon,
+        },
+      ) as EventMarker;
+      eventMarker.id = activeEvent.id;
+      setEventMarkers((prev) => [...prev, eventMarker]);
 
-    sources.forEach((source) => {
-      const marker = L.marker([source.location.lat, source.location.lon], {
-        icon: greenIcon,
-      }) as SourceMarker;
-      marker.id = source.id;
-      setSourceMarkers((prev) => [...prev, marker]);
-    });
+      const source = sources.find((src) => src.id === activeEvent.sourceId);
+
+      const sourceMarker = L.marker(
+        [
+          source?.location.lat || defaultLocation[0],
+          source?.location.lon || defaultLocation[1],
+        ],
+        {
+          icon: greenIcon,
+        },
+      ) as SourceMarker;
+      sourceMarker.id = source?.id || '';
+      setSourceMarkers((prev) => [...prev, sourceMarker]);
+    } else {
+      events.forEach((event) => {
+        const marker = L.marker([event.location.lat, event.location.lon], {
+          icon: blueIcon,
+        }) as EventMarker;
+        marker.id = event.id;
+        setEventMarkers((prev) => [...prev, marker]);
+      });
+
+      sources.forEach((source) => {
+        const marker = L.marker([source.location.lat, source.location.lon], {
+          icon: greenIcon,
+        }) as SourceMarker;
+        marker.id = source.id;
+        setSourceMarkers((prev) => [...prev, marker]);
+      });
+    }
   }, [events, sources, resetKey]);
 
   // Add markers to the map
@@ -101,6 +128,20 @@ export const EventMap = ({ events, sources }: EventMapProps) => {
     if (!leafletMapRef.current) return;
     eventMarkers.forEach((marker) => {
       marker.addTo(leafletMapRef.current!);
+      if (eventMarkers.length === 1 || marker.id === eventId) {
+        const event = events.find((evt) => evt.id === marker.id);
+        if (!event) return;
+        marker
+          .bindPopup(
+            `
+            <div>
+              <span><strong>Event id:</strong> ${event.id?.split('-')[0] ?? ''}</span><br/>
+              <span><strong>Value:</strong> ${event.value ?? ''}</span>
+            </div>
+            `,
+          )
+          .openPopup();
+      }
     });
     sourceMarkers.forEach((marker) => {
       marker.addTo(leafletMapRef.current!);

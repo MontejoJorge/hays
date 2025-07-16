@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { getSources } from '../../../api/sources';
 import type { Event, Source } from '../../../types';
 import styles from './styles.module.scss';
+import { Link } from 'react-router';
 
 interface EventsTableProps {
   data: Event[];
@@ -38,6 +39,13 @@ export const EventsTable = ({ data }: EventsTableProps) => {
             </td>
             <td className={styles.td}>
               {event.location.lat.toFixed(2)}, {event.location.lon.toFixed(2)}
+              &nbsp;
+              <Link
+                to={`/map?eventId=${encodeURIComponent(event.id)}`}
+                className={styles.link}
+              >
+                Ver en mapa
+              </Link>
             </td>
           </tr>
         ))}
